@@ -70,16 +70,21 @@ public class AdministratorController {
 	 */
 	@RequestMapping("/insert")
 	public String insert(@Validated InsertAdministratorForm form,
-			BindingResult result) {
+			BindingResult result,Model model) {
 		if(result.hasErrors()) {
 			return toInsert() ;
 		}
+		try {
 		Administrator administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
 		administratorService.insert(administrator);
-		System.out.println(10/0);
+
 		return toLogin() ;
+		}catch(Exception e){	
+			model.addAttribute("errorMessage","メールアドレスが重複しています");
+			return toInsert() ;
+		}
 	}
 
 	/////////////////////////////////////////////////////

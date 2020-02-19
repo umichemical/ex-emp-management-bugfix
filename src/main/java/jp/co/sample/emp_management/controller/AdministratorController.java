@@ -80,9 +80,9 @@ public class AdministratorController {
 		BeanUtils.copyProperties(form, administrator);
 		administratorService.insert(administrator);
 
-		return toLogin() ;
+		return "redirect:";
 		}catch(Exception e){	
-			model.addAttribute("errorMessage","メールアドレスが重複しています");
+			model.addAttribute("errorMessage","このメールアドレスは登録されています");
 			return toInsert() ;
 		}
 	}

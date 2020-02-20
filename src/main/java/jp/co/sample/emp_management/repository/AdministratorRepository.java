@@ -43,6 +43,7 @@ public class AdministratorRepository {
 	 * @param passward    パスワード
 	 * @return 管理者情報 存在しない場合はnullを返します
 	 */
+	//SQLインジェクション対策を実施。
 	public Administrator findByMailAddressAndPassward(String mailAddress, String password) {
 		String sql = "select id,name,mail_address,password from administrators where mail_address=:mailAddress and password=:password";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("mailAddress", mailAddress).addValue("password", password);

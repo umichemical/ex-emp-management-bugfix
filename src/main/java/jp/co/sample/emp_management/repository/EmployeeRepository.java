@@ -73,6 +73,24 @@ public class EmployeeRepository {
 
 		return development;
 	}
+	
+	/**
+	 * フォームに入力された名前から従業員情報を取得します.
+	 * @param nameResearch 従業員名の一部
+	 * @return　従業員情報
+	 * @exception 従業員が存在しない場合は例外を発生します
+	 */
+	public List<Employee> findByName(String nameResearch){
+		String sql="SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count FROM employees WHERE name like :name ORDER BY hire_date DESC";
+		SqlParameterSource param=new MapSqlParameterSource().addValue("name", "%"+nameResearch+"%");
+		
+		List <Employee> employeeList=template.query(sql, param,EMPLOYEE_ROW_MAPPER);
+		if (employeeList.size() == 0) {
+			return null;
+		}
+		
+		return employeeList;
+	}
 
 	/**
 	 * 従業員情報を変更します.
@@ -83,4 +101,5 @@ public class EmployeeRepository {
 		String updateSql = "UPDATE employees SET dependents_count=:dependentsCount WHERE id=:id";
 		template.update(updateSql, param);
 	}
+
 }

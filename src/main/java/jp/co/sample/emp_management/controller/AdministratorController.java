@@ -69,24 +69,25 @@ public class AdministratorController {
 	 */
 	@RequestMapping("/insert")
 	public String insert(@Validated InsertAdministratorForm form, BindingResult result, Model model) {
+
+		if (administratorService.findByMailAddress(form.getMailAddress())!=null) {
+			result.rejectValue("mailAddress", "Registered", "このメールアドレスは既に登録されています");
+		}
+		if (!(form.getConfirmPassword().equals(form.getPassword()))) {
+			result.rejectValue("confirmPassword", "Notmatch", "確認用パスワードとパスワードが一致しません");
+		}
+
 		if (result.hasErrors()) {
 			return toInsert();
-		}else if(form.getMailAddress().equals(administratorService.findByMailAddress(form.getMailAddress()).getMailAddress())) {
-			result.rejectValue("mailAddress", "Registered", "このメールアドレスは既に登録されています");
-			return toInsert();
 		}
-		else if (!(form.getConfirmPassword().equals(form.getPassword()))) {
-			result.rejectValue("confirmPassword", "Notmatch","確認用パスワードとパスワードが一致しません");
-			return toInsert();
-		} else {
-			Administrator administrator = new Administrator();
-			// フォームからドメインにプロパティ値をコピー
-			BeanUtils.copyProperties(form, administrator);
-			administratorService.insert(administrator);
 
-			return "redirect:/";
+		Administrator administrator = new Administrator();
+		// フォームからドメインにプロパティ値をコピー
+		BeanUtils.copyProperties(form, administrator);
+		administratorService.insert(administrator);
 
-		}
+		return "redirect:/";
+
 	}
 
 	/////////////////////////////////////////////////////

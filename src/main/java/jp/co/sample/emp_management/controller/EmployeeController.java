@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.co.sample.emp_management.domain.Employee;
 import jp.co.sample.emp_management.form.UpdateEmployeeForm;
+import jp.co.sample.emp_management.form.NameResearchForm;
 import jp.co.sample.emp_management.service.EmployeeService;
 
 /**
@@ -37,6 +38,14 @@ public class EmployeeController {
 		return new UpdateEmployeeForm();
 	}
 
+	/**
+	 * 使用するフォームをオブジェクトをリクエストスコープに格納する.
+	 * @return フォーム
+	 */
+	@ModelAttribute
+	public NameResearchForm setUpForm2() {
+		return new NameResearchForm();
+	}
 	/////////////////////////////////////////////////////
 	// ユースケース：従業員一覧を表示する
 	/////////////////////////////////////////////////////
@@ -52,7 +61,6 @@ public class EmployeeController {
 		model.addAttribute("employeeList", employeeList);
 		return "employee/list";
 	}
-
 	
 	/////////////////////////////////////////////////////
 	// ユースケース：従業員詳細を表示する
@@ -69,6 +77,34 @@ public class EmployeeController {
 		Employee employee = employeeService.showDetail(Integer.parseInt(id));
 		model.addAttribute("employee", employee);
 		return "employee/detail";
+	}
+	
+	
+	/**
+	 * フォームに入力された名前から従業員情報を取得する.
+	 * @param form 名前を入力するフォーム
+	 * @param result 結果を格納する
+	 * @param model リクエストスコープ
+	 * @return　従業員一覧画面
+	 */
+	@RequestMapping("/showFindByName")
+	public String showfindByName(NameResearchForm form,Model model) {
+		
+		if(form.getNameResearch()=="") {
+			return showList(model) ;
+		}
+		
+		List<Employee> employeeList=employeeService.findByName(form.getNameResearch());
+		System.out.println("検索結果"+ employeeList);
+		if(employeeList==null) {
+			System.out.println("検索結果がありませんでした");
+			model.addAttribute("errorMessage","一件もありませんでした");
+			return showList(model) ;
+		}
+		
+		model.addAttribute("employeeList",employeeList);
+		model.addAttribute("nameResearch",form.getNameResearch());
+		return "employee/list";
 	}
 	
 	/////////////////////////////////////////////////////

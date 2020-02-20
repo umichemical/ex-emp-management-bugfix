@@ -54,7 +54,6 @@
 		<ol class="breadcrumb">
 			<li class="active"><a href="list.html" th:href="@{/employee/showList}">従業員リスト</a></li>
 		</ol>
-
 		<!-- table -->
 		<div class="row">
 			<div
@@ -63,7 +62,11 @@
 <!-- ここから上を編集する必要はありません -->
 
 <!-- ここにモックのtable要素を貼り付けます -->
-
+				<form th:action="@{/employee/showFindByName}" th:object="${nameResearchForm}">
+				従業員名：<input type="text" name="nameResearch" th:field="*{nameResearch}">
+				<button>検索</button>
+				<span th:text="${errorMessage}" style="color:red;"></span>
+				</form>
 				<table class="table table-striped">
 					<thead>
 						<tr>

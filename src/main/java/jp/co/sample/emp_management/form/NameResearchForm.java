@@ -1,5 +1,8 @@
 package jp.co.sample.emp_management.form;
 
+import java.util.List;
+
+import jp.co.sample.emp_management.domain.Employee;
 
 public class NameResearchForm {
 
@@ -10,13 +13,15 @@ public class NameResearchForm {
 		return nameResearch;
 	}
 
-	@Override
-	public String toString() {
-		return "nameResearchForm [nameResearch=" + nameResearch + "]";
-	}
-
 	public void setNameResearch(String nameResearch) {
 		this.nameResearch = nameResearch;
 	}
+
+	@Override
+	public String toString() {
+		return "NameResearchForm [nameResearch=" + nameResearch + "]";
+	}
+
+
 
 }

@@ -9,6 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jp.co.sample.emp_management.domain.Employee;
 import jp.co.sample.emp_management.form.UpdateEmployeeForm;
@@ -55,8 +57,9 @@ public class EmployeeController {
 	 * @param model モデル
 	 * @return 従業員一覧画面
 	 */
-	@RequestMapping("/showList")
-	public String showList(Model model) {
+	@RequestMapping(value="/showList")
+	public String showList(Model model,NameResearchForm form) {
+		
 		List<Employee> employeeList = employeeService.showList();
 		model.addAttribute("employeeList", employeeList);
 		return "employee/list";
@@ -87,25 +90,27 @@ public class EmployeeController {
 	 * @param model リクエストスコープ
 	 * @return　従業員一覧画面
 	 */
-	@RequestMapping("/showFindByName")
+	@RequestMapping(value="/showFindByName")
 	public String showfindByName(NameResearchForm form,Model model) {
 		
 		if(form.getNameResearch()=="") {
-			return showList(model) ;
+			return showList(model,form) ;
 		}
 		
 		List<Employee> employeeList=employeeService.findByName(form.getNameResearch());
-		System.out.println("検索結果"+ employeeList);
-		if(employeeList==null) {
-			System.out.println("検索結果がありませんでした");
+		
+//		f(employeeList == null) {
+//		f(employeeList == null||employeeList.size() == 0) {
+		if(employeeList.size() == 0) {
 			model.addAttribute("errorMessage","一件もありませんでした");
-			return showList(model) ;
+			return showList(model,form) ;
 		}
 		
 		model.addAttribute("employeeList",employeeList);
 		model.addAttribute("nameResearch",form.getNameResearch());
 		return "employee/list";
 	}
+	
 	
 	/////////////////////////////////////////////////////
 	// ユースケース：従業員詳細を更新する
